@@ -32,6 +32,7 @@ role: IT Coordinator @ Prefeitura Municipal de Mandaguari
 
 current_machine: Bolsotron  # i5-11600K · RTX 3090 · 32GB RAM · sagrado
 field_machine:   Lulatron   # ThinkPad T14 Gen 1 AMD
+transport_layer: Corollatron GLi 2017
 
 philosophy: "Se não existe, eu construo. Se existe, eu refaço melhor."
 ```
@@ -123,5 +124,6 @@ philosophy: "Se não existe, eu construo. Se existe, eu refaço melhor."
 ---
 
 <div align="center">
-  <sub>Impenetrável.</sub>
+  <sub>The grid remembers.</sub>
+   <sub>Impenetrável.</sub>
 </div>
