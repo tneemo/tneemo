@@ -30,9 +30,8 @@ role: IT Coordinator @ Prefeitura Municipal de Mandaguari
       Founder @ Tneemo Industries
       Student @ Systems Analysis & Development — UniCesumar
 
-current_machine: Bolsotron  # i5-11600K · RTX 3090 · 32GB RAM · sagrado
-field_machine:   Lulatron   # ThinkPad T14 Gen 1 AMD
-transport_layer: Corollatron GLi 2017
+current_machine: i5-11600K · RTX 3090 · 32GB RAM · sagrado
+field_machine:   ThinkPad T14 Gen 1 AMD
 
 philosophy: "Se não existe, eu construo. Se existe, eu refaço melhor."
 ```
