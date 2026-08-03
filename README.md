@@ -2,14 +2,7 @@
 
 <div align="center">
 
-```
-████████╗███╗   ██╗███████╗███████╗███╗   ███╗ ██████╗ 
-╚══██╔══╝████╗  ██║██╔════╝██╔════╝████╗ ████║██╔═══██╗
-   ██║   ██╔██╗ ██║█████╗  █████╗  ██╔████╔██║██║   ██║
-   ██║   ██║╚██╗██║██╔══╝  ██╔══╝  ██║╚██╔╝██║██║   ██║
-   ██║   ██║ ╚████║███████╗███████╗██║ ╚═╝ ██║╚██████╔╝
-   ╚═╝   ╚═╝  ╚═══╝╚══════╝╚══════╝╚═╝     ╚═╝ ╚═════╝ 
-```
+<img src="assets/banner.svg" width="100%" alt="tneemo — privatizando o universo, um PR por vez" />
 
 **`João · IT Coordinator · Tneemo Industries founder · Systems Dev`**
 
@@ -103,19 +96,6 @@ philosophy: "Se não existe, eu construo. Se existe, eu refaço melhor."
 
 ---
 
-## `./tneemo-industries --about`
-
-> Tneemo Industries é um ecossistema de projetos construído desde 2018 —
-> começou como um nick, virou cultura, depois virou infraestrutura.
->
-> Hardware industrial (**Forjatec**) · Marketplaces (**Collector Platform**) ·
-> AI local (**Kranio · NCL**) · Game dev (**Hantavirus FPS**) ·
-> Redes Minecraft (**Dragon Realms**) · Gestão pública de TI em escala real.
->
-> Tudo construído por uma pessoa, com foco cirúrgico e 1 bilhão de anos de dedicação.
-
----
-
 ## `./oss --live`
 
 > Números gerados automaticamente pela API do GitHub em 2026-08-03 —
@@ -137,6 +117,26 @@ philosophy: "Se não existe, eu construo. Se existe, eu refaço melhor."
   - [#77548](https://github.com/NousResearch/hermes-agent/pull/77548)
   - [#77517](https://github.com/NousResearch/hermes-agent/pull/77517)
   - [#74283](https://github.com/NousResearch/hermes-agent/pull/74283)
+
+---
+
+## `./tneemo-industries --about`
+
+> Tneemo Industries é um ecossistema de projetos construído desde 2018 —
+> começou como um nick, virou cultura, depois virou infraestrutura.
+>
+> Hardware industrial (**Forjatec**) · Marketplaces (**Collector Platform**) ·
+> AI local (**Kranio · NCL**) · Game dev (**Hantavirus FPS**) ·
+> Redes Minecraft (**Dragon Realms**) · Gestão pública de TI em escala real.
+>
+> Tudo construído por uma pessoa, com foco cirúrgico e 1 bilhão de anos de dedicação.
+
+```console
+$ tneemo --lore
+Estelionato de Nêutrons ......... vaporware desde 2018, e ainda assim entrega
+Impenetrável ................... o firewall, o repo, o sono
+O Altar ........................ 24GB de VRAM rodando modelo local até de madrugada
+```
 
 ---
 

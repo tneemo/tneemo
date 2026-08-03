@@ -1,0 +1,162 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300" width="1200" height="300" role="img" aria-label="tneemo — privatizando o universo, um PR por vez">
+  <title>tneemo — privatizando o universo, um PR por vez</title>
+
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0d1117"/>
+      <stop offset="60%" stop-color="#0b0f14"/>
+      <stop offset="100%" stop-color="#080b0f"/>
+    </linearGradient>
+
+    <linearGradient id="heat" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0%" stop-color="#FF6B35" stop-opacity="0.9"/>
+      <stop offset="55%" stop-color="#00FF99" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#00FF99" stop-opacity="0"/>
+    </linearGradient>
+
+    <radialGradient id="altarGlow" cx="50%" cy="100%" r="70%">
+      <stop offset="0%" stop-color="#FF6B35" stop-opacity="0.35"/>
+      <stop offset="60%" stop-color="#00FF99" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#00FF99" stop-opacity="0"/>
+    </radialGradient>
+
+    <filter id="soft" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6"/>
+    </filter>
+
+    <filter id="softer" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2.5"/>
+    </filter>
+
+    <!-- onda de calor: linha ondulada subindo do altar -->
+    <path id="wave" d="M0 0 c 7 -15 -7 -30 0 -45"/>
+  </defs>
+
+  <rect width="1200" height="300" fill="url(#bg)"/>
+
+  <!-- piso do templo: linhas de perspectiva -->
+  <g stroke="#00FF99" stroke-opacity="0.07" stroke-width="1">
+    <path d="M600 232 L 60 300"/>
+    <path d="M600 232 L 250 300"/>
+    <path d="M600 232 L 440 300"/>
+    <path d="M600 232 L 760 300"/>
+    <path d="M600 232 L 950 300"/>
+    <path d="M600 232 L 1140 300"/>
+    <path d="M0 258 H1200"/>
+    <path d="M0 276 H1200"/>
+    <path d="M0 296 H1200"/>
+  </g>
+
+  <!-- colunas: pilares do templo -->
+  <g stroke="#00FF99" stroke-opacity="0.22" fill="none" stroke-width="1.5">
+    <g>
+      <rect x="96" y="252" width="72" height="10"/>
+      <rect x="104" y="86" width="56" height="166"/>
+      <rect x="92" y="72" width="80" height="14"/>
+      <g stroke-opacity="0.12">
+        <path d="M118 90 V248"/><path d="M132 90 V248"/><path d="M146 90 V248"/>
+      </g>
+    </g>
+    <g>
+      <rect x="1032" y="252" width="72" height="10"/>
+      <rect x="1040" y="86" width="56" height="166"/>
+      <rect x="1028" y="72" width="80" height="14"/>
+      <g stroke-opacity="0.12">
+        <path d="M1054 90 V248"/><path d="M1068 90 V248"/><path d="M1082 90 V248"/>
+      </g>
+    </g>
+  </g>
+
+  <!-- brilho do altar -->
+  <ellipse cx="600" cy="248" rx="280" ry="90" fill="url(#altarGlow)"/>
+
+  <!-- ondas de calor subindo do altar (a placa respirando) -->
+  <g fill="none" stroke="url(#heat)" stroke-width="2" stroke-linecap="round">
+    <g transform="translate(505,212)">
+      <use href="#wave" opacity="0">
+        <animate attributeName="opacity" values="0;0.75;0" dur="6s" begin="0s" repeatCount="indefinite"/>
+        <animateTransform attributeName="transform" type="translate" values="0 0; 0 -18" dur="6s" begin="0s" repeatCount="indefinite"/>
+      </use>
+    </g>
+    <g transform="translate(548,212)">
+      <use href="#wave" opacity="0">
+        <animate attributeName="opacity" values="0;0.6;0" dur="7s" begin="1.1s" repeatCount="indefinite"/>
+        <animateTransform attributeName="transform" type="translate" values="0 0; 0 -22" dur="7s" begin="1.1s" repeatCount="indefinite"/>
+      </use>
+    </g>
+    <g transform="translate(600,212)">
+      <use href="#wave" opacity="0">
+        <animate attributeName="opacity" values="0;0.85;0" dur="5.5s" begin="2.2s" repeatCount="indefinite"/>
+        <animateTransform attributeName="transform" type="translate" values="0 0; 0 -26" dur="5.5s" begin="2.2s" repeatCount="indefinite"/>
+      </use>
+    </g>
+    <g transform="translate(652,212)">
+      <use href="#wave" opacity="0">
+        <animate attributeName="opacity" values="0;0.6;0" dur="6.5s" begin="0.6s" repeatCount="indefinite"/>
+        <animateTransform attributeName="transform" type="translate" values="0 0; 0 -20" dur="6.5s" begin="0.6s" repeatCount="indefinite"/>
+      </use>
+    </g>
+    <g transform="translate(695,212)">
+      <use href="#wave" opacity="0">
+        <animate attributeName="opacity" values="0;0.7;0" dur="7.5s" begin="3s" repeatCount="indefinite"/>
+        <animateTransform attributeName="transform" type="translate" values="0 0; 0 -16" dur="7.5s" begin="3s" repeatCount="indefinite"/>
+      </use>
+    </g>
+  </g>
+
+  <!-- altar: a RTX 3090 -->
+  <g>
+    <rect x="470" y="212" width="260" height="30" rx="3" fill="#0f1620" stroke="#00FF99" stroke-opacity="0.5" stroke-width="1.5"/>
+    <rect x="452" y="242" width="296" height="12" rx="2" fill="#0f1620" stroke="#00FF99" stroke-opacity="0.3" stroke-width="1.5"/>
+    <!-- coolers -->
+    <circle cx="536" cy="227" r="9" fill="none" stroke="#00FF99" stroke-opacity="0.45" stroke-width="1.2"/>
+    <circle cx="664" cy="227" r="9" fill="none" stroke="#00FF99" stroke-opacity="0.45" stroke-width="1.2"/>
+    <g stroke="#00FF99" stroke-opacity="0.55" stroke-width="1.2" fill="none">
+      <path d="M536 218 A9 9 0 0 1 545 227">
+        <animateTransform attributeName="transform" type="rotate" from="0 536 227" to="360 536 227" dur="2.4s" repeatCount="indefinite"/>
+      </path>
+      <path d="M664 218 A9 9 0 0 1 673 227">
+        <animateTransform attributeName="transform" type="rotate" from="0 664 227" to="360 664 227" dur="3.1s" repeatCount="indefinite"/>
+      </path>
+    </g>
+    <!-- fita de VRAM pulsando -->
+    <g fill="#00FF99">
+      <rect x="580" y="222" width="6" height="10" opacity="0.8">
+        <animate attributeName="opacity" values="0.8;0.2;0.8" dur="1.8s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="592" y="222" width="6" height="10" opacity="0.4">
+        <animate attributeName="opacity" values="0.4;0.9;0.4" dur="2.3s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="604" y="222" width="6" height="10" opacity="0.7">
+        <animate attributeName="opacity" values="0.7;0.25;0.7" dur="1.4s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="616" y="222" width="6" height="10" opacity="0.3">
+        <animate attributeName="opacity" values="0.3;0.85;0.3" dur="2.9s" repeatCount="indefinite"/>
+      </rect>
+    </g>
+    <text x="600" y="272" text-anchor="middle" font-family="ui-monospace,'SFMono-Regular',Consolas,'Liberation Mono',monospace" font-size="10" letter-spacing="4" fill="#00FF99" fill-opacity="0.45">O ALTAR · RTX 3090 · 24GB</text>
+  </g>
+
+  <!-- nome -->
+  <g text-anchor="middle" font-family="ui-monospace,'SFMono-Regular',Consolas,'Liberation Mono',monospace">
+    <text x="600" y="140" font-size="82" font-weight="700" letter-spacing="10" fill="#00FF99" fill-opacity="0.35" filter="url(#soft)">tneemo</text>
+    <text x="600" y="140" font-size="82" font-weight="700" letter-spacing="10" fill="#00FF99">tneemo<animate attributeName="fill-opacity" values="1;0.86;1" dur="5s" repeatCount="indefinite"/></text>
+    <text x="600" y="176" font-size="16" letter-spacing="3" fill="#c9d1d9" fill-opacity="0.72">privatizando o universo, um PR por vez</text>
+  </g>
+
+  <!-- cantos de terminal -->
+  <g stroke="#00FF99" stroke-opacity="0.35" stroke-width="2" fill="none">
+    <path d="M24 44 V24 H44"/>
+    <path d="M1156 44 V24 H1136"/>
+    <path d="M24 256 V276 H44"/>
+    <path d="M1156 256 V276 H1136"/>
+  </g>
+
+  <!-- cursor piscando -->
+  <g font-family="ui-monospace,'SFMono-Regular',Consolas,'Liberation Mono',monospace" font-size="13" letter-spacing="2">
+    <text x="48" y="40" fill="#00FF99" fill-opacity="0.55">tneemo@altar:~$</text>
+    <rect x="192" y="30" width="8" height="13" fill="#00FF99" filter="url(#softer)">
+      <animate attributeName="opacity" values="1;1;0;0" dur="1.2s" repeatCount="indefinite"/>
+    </rect>
+  </g>
+</svg>
