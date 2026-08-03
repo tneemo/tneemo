@@ -98,6 +98,30 @@ philosophy: "Se não existe, eu construo. Se existe, eu refaço melhor."
 
 ---
 
+## `./oss --contributions`
+
+> Open source: verificação independente de PRs com evidência executável
+> (testes reais + repro), não opinião. Foco em Windows · desktop · segurança.
+
+**NousResearch/hermes-agent**
+
+| PR | Tipo | Estado |
+|---|---|---|
+| [feat(desktop): Launch Hermes Desktop at login](https://github.com/NousResearch/hermes-agent/pull/77025) | ✍️ Autoria | 🏆 best fix ×2 (issues #76897 + #38640) |
+| [feat(custom-providers): bearer_auth option](https://github.com/NousResearch/hermes-agent/pull/77664) | ✍️ Autoria | 🆕 aguardando triagem |
+| [feat(usage): desktop usage summary](https://github.com/NousResearch/hermes-agent/pull/77251) | ✍️ Autoria | 🔄 draft · 5/5 findings fechados |
+| [#77517 Windows updater fix](https://github.com/NousResearch/hermes-agent/pull/77517) | 🔍 Review formal | ✅ 5/5 testes no Win11 real |
+| [#77548 gateway authz scope](https://github.com/NousResearch/hermes-agent/pull/77548) | 🔍 Review formal | ✅ 29 pass · leak confirmado |
+| [#77579 permissions hardening](https://github.com/NousResearch/hermes-agent/pull/77579) | 🔍 Review formal | ✅ 23 pass via WSL |
+| [#77658 registry ownership gate](https://github.com/NousResearch/hermes-agent/pull/77658) | 🔍 Review formal | ✅ 30/30 testes |
+| [#74283 env_loader secrets](https://github.com/NousResearch/hermes-agent/pull/74283) | 🔍 Review formal | ✅ 18/18 + fix de 3 linhas |
+
+> Filosofia: código antes de decisão = duplicata. Verificação com o ambiente
+> real do bug vale mais que 10 comentários teóricos. E nunca abrir PR
+> duplicada — o repo já tem 18 mil abertas. 😄
+
+---
+
 ## `./tneemo-industries --about`
 
 > Tneemo Industries é um ecossistema de projetos construído desde 2018 —
