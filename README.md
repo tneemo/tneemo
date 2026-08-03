@@ -38,16 +38,21 @@ philosophy: "Se não existe, eu construo. Se existe, eu refaço melhor."
 
 ---
 
-## `./projects --active`
+## `./projects --portfolio`
+
+> Ecossistema desde 2018 — alguns em pausa, outros vivos, todos construídos por uma pessoa.
 
 | Projeto | Stack | Status |
 |---|---|---|
-| **[Collector Platform](https://collectors.tneemo.com)** | Hono · React · Neon · Drizzle · Auth.js v5 | 🟢 Em desenvolvimento |
-| **Hantavirus FPS** | Unreal Engine 5 · Blender · BlenderGIS | 🟡 World-building |
-| **Kranio Cognitive System** | MCP · Cloudflare Tunnel · Markdown Canon | 🟢 Online |
-| **Forjatec Nióbio Edition** | Blender · Liga Al-Nb · Padrão ATX-FTEC | 🏛️ Patenteado — INPI BR 10 2026 005717 7 |
-| **NCL — Neemo Cognitive Layer** | Rust · Ollama · Agentic OS | 🔵 Fase 0 |
+| **[Kranio Cognitive System](https://kranio.app)** | MCP · Cloudflare Tunnel · Markdown Canon · Hermes | 🟢 **Ativo** (stack diária) |
+| **NCL — Neemo Cognitive Layer (Curio)** | Rust · Ollama · Agentic OS | 🟢 Ativo (agente autônomo em desenvolvimento contínuo) |
+| **[Collector Platform](https://collectors.tneemo.com)** | Hono · React · Neon · Drizzle · Auth.js v5 | 🔵 Manutenção |
+| **Hantavirus FPS** | Unreal Engine 5 · Blender · BlenderGIS | 🧊 Pausado (world-building em espera) |
+| **Forjatec Nióbio Edition** | Blender · Liga Al-Nb · Padrão ATX-FTEC | 🏛️ Patenteado — INPI BR 10 2026 005717 7 (IP fechado) |
 | **Dragon Realms** | Velocity · Paper · MariaDB · Redis · Docker | 🧊 Freeze |
+
+> A energia de 2026: open source (NousResearch/hermes-agent) + agentes locais
+> (Kranio · Curio). Os demais seguem vivos na prateleira, não enterrados.
 
 ---
 
@@ -98,30 +103,6 @@ philosophy: "Se não existe, eu construo. Se existe, eu refaço melhor."
 
 ---
 
-## `./oss --contributions`
-
-> Open source: verificação independente de PRs com evidência executável
-> (testes reais + repro), não opinião. Foco em Windows · desktop · segurança.
-
-**NousResearch/hermes-agent**
-
-| PR | Tipo | Estado |
-|---|---|---|
-| [feat(desktop): Launch Hermes Desktop at login](https://github.com/NousResearch/hermes-agent/pull/77025) | ✍️ Autoria | 🏆 best fix ×2 (issues #76897 + #38640) |
-| [feat(custom-providers): bearer_auth option](https://github.com/NousResearch/hermes-agent/pull/77664) | ✍️ Autoria | 🆕 aguardando triagem |
-| [feat(usage): desktop usage summary](https://github.com/NousResearch/hermes-agent/pull/77251) | ✍️ Autoria | 🔄 draft · 5/5 findings fechados |
-| [#77517 Windows updater fix](https://github.com/NousResearch/hermes-agent/pull/77517) | 🔍 Review formal | ✅ 5/5 testes no Win11 real |
-| [#77548 gateway authz scope](https://github.com/NousResearch/hermes-agent/pull/77548) | 🔍 Review formal | ✅ 29 pass · leak confirmado |
-| [#77579 permissions hardening](https://github.com/NousResearch/hermes-agent/pull/77579) | 🔍 Review formal | ✅ 23 pass via WSL |
-| [#77658 registry ownership gate](https://github.com/NousResearch/hermes-agent/pull/77658) | 🔍 Review formal | ✅ 30/30 testes |
-| [#74283 env_loader secrets](https://github.com/NousResearch/hermes-agent/pull/74283) | 🔍 Review formal | ✅ 18/18 + fix de 3 linhas |
-
-> Filosofia: código antes de decisão = duplicata. Verificação com o ambiente
-> real do bug vale mais que 10 comentários teóricos. E nunca abrir PR
-> duplicada — o repo já tem 18 mil abertas. 😄
-
----
-
 ## `./tneemo-industries --about`
 
 > Tneemo Industries é um ecossistema de projetos construído desde 2018 —
@@ -132,6 +113,30 @@ philosophy: "Se não existe, eu construo. Se existe, eu refaço melhor."
 > Redes Minecraft (**Dragon Realms**) · Gestão pública de TI em escala real.
 >
 > Tudo construído por uma pessoa, com foco cirúrgico e 1 bilhão de anos de dedicação.
+
+---
+
+## `./oss --live`
+
+> Números gerados automaticamente pela API do GitHub em 2026-08-03 —
+> sem mão humana, sem medalha mordida. 😄
+
+| Métrica | Valor |
+|---|---|
+| PRs no upstream ([NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent)) | **3** total · **3** abertas |
+| Reviews formais dados | **4** |
+| Issues abertas por mim | **0** |
+
+**PRs abertas agora:**
+  - [#77664](https://github.com/NousResearch/hermes-agent/pull/77664) feat(custom-providers): add bearer_auth 
+  - [#77251](https://github.com/NousResearch/hermes-agent/pull/77251) feat(usage): desktop usage summary surfa
+  - [#77025](https://github.com/NousResearch/hermes-agent/pull/77025) feat(desktop): add Launch Hermes Desktop
+
+**Últimas PRs que revistei:**
+  - [#77658](https://github.com/NousResearch/hermes-agent/pull/77658)
+  - [#77548](https://github.com/NousResearch/hermes-agent/pull/77548)
+  - [#77517](https://github.com/NousResearch/hermes-agent/pull/77517)
+  - [#74283](https://github.com/NousResearch/hermes-agent/pull/74283)
 
 ---
 
