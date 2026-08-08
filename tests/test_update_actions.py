@@ -195,3 +195,140 @@ def test_parse_action_line():
     assert p["ref"] == "11d5960a326750d5838078e36cf38b85af677262"
     assert "v4.4.0" in p["comment"]
     assert ua.parse_action_line("      - name: build\n") is None
+
+
+# Production-style workflow for the end-to-end repo builds: the `uses:` lines
+# carry their version comment INLINE (as update-oss.yml does), so a no-op SHA
+# rewrite is truly a no-op and a README-only run stays README-only.
+WORKFLOW_E2E = """name: demo
+on: push
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0; pin reviewed 2026-08-04
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5.6.0; pin reviewed 2026-08-04
+        with:
+          python-version: "3.12"
+"""
+
+import subprocess as _sp  # noqa: E402  (kept local to the integration block)
+
+
+def _make_repo(tmp_path, readme_text):
+    """Build a real git repo with the workflow + pinned-actions.yaml + README
+    so that `run()`'s git-backed helpers (`readme_changed`) behave for real."""
+    root = tmp_path / "repo"
+    (root / ".github" / "workflows").mkdir(parents=True)
+    root.mkdir(parents=True, exist_ok=True)
+    (root / ".github" / "workflows" / "update-oss.yml").write_text(
+        WORKFLOW_E2E, encoding="utf-8"
+    )
+    (root / "pinned-actions.yaml").write_text(
+        "actions:\n"
+        "  - owner: actions\n    repo: checkout\n    tag: v4\n"
+        "    sha: 11d5960a326750d5838078e36cf38b85af677262\n"
+        "    workflow: .github/workflows/update-oss.yml\n"
+        "    step_comment: v4.4.0; pin reviewed 2026-08-04\n"
+        "  - owner: actions\n    repo: setup-python\n    tag: v5\n"
+        "    sha: a26af69be951a213d495a4c3e4e4022e16d87065\n"
+        "    workflow: .github/workflows/update-oss.yml\n"
+        "    step_comment: v5.6.0; pin reviewed 2026-08-04\n",
+        encoding="utf-8",
+    )
+    (root / "README.md").write_text(readme_text, encoding="utf-8")
+    _sp.run(["git", "init", "-q"], cwd=root, check=True)
+    _sp.run(["git", "config", "user.email", "bot@local"], cwd=root, check=True)
+    _sp.run(["git", "config", "user.name", "bot"], cwd=root, check=True)
+    _sp.run(["git", "add", "-A"], cwd=root, check=True)
+    _sp.run(["git", "commit", "-qm", "base"], cwd=root, check=True)
+    return root
+
+
+def _install_pr_recorders(monkeypatch):
+    """Replace the gh-backed PR plumbing with recorders; return the log."""
+    calls = []
+
+    def _commit_and_push(modified, branch=ua.ACTION_BRANCH):
+        calls.append(("commit_and_push", branch))
+
+    def _open_pr(body, branch=ua.ACTION_BRANCH):
+        calls.append(("open_pr", branch))
+        return "https://example.com/pr/1"
+
+    def _update_pr(number, body):
+        calls.append(("update_pr",))
+
+    def _auto_merge_pr(number):
+        calls.append(("auto_merge_pr",))
+
+    monkeypatch.setattr(ua, "commit_and_push", _commit_and_push)
+    monkeypatch.setattr(ua, "open_pr", _open_pr)
+    monkeypatch.setattr(ua, "update_pr", _update_pr)
+    monkeypatch.setattr(ua, "auto_merge_pr", _auto_merge_pr)
+    # No pre-existing PR -> the script takes the OPEN path (so we can assert
+    # the branch the PR is opened on). After opening, pr_exists must return a
+    # number so the script can act on the new PR (auto-merge it).
+    state = {"calls": 0}
+
+    def _pr_exists(branch):
+        state["calls"] += 1
+        return None if state["calls"] == 1 else "42"
+
+    monkeypatch.setattr(ua, "pr_exists", _pr_exists)
+    monkeypatch.setattr(ua, "run_oss_generator", lambda: None)
+    return calls
+
+
+_CURRENT_SHAS = {
+    ("actions", "checkout"): "11d5960a326750d5838078e36cf38b85af677262",
+    ("actions", "setup-python"): "a26af69be951a213d495a4c3e4e4022e16d87065",
+}
+
+
+def test_run_action_sha_change_is_human_gated_and_not_auto_merged(
+    tmp_path, monkeypatch
+):
+    root = _make_repo(tmp_path, "# readme (unchanged)\n")
+    monkeypatch.setattr(ua, "REPO_ROOT", str(root))
+    monkeypatch.setattr(ua, "PINNED_YAML", str(root / "pinned-actions.yaml"))
+    monkeypatch.setattr(ua, "readme_changed", lambda: False)
+    calls = _install_pr_recorders(monkeypatch)
+
+    new_sha = "f" * 40
+
+    def fake_resolver(owner, repo, tag):
+        return new_sha  # a NEW sha => action ref changed
+
+    rc = ua.run(dry_run=False, resolver=fake_resolver)
+    assert rc == 0
+    # It opens a PR on the human-gated action branch...
+    assert ("open_pr", ua.ACTION_BRANCH) in calls
+    # ...and it NEVER auto-merges an action-SHA change.
+    assert not any(c[0] == "auto_merge_pr" for c in calls)
+    # The workflow file is the one reported changed; no README push.
+    assert ("commit_and_push", ua.ACTION_BRANCH) in calls
+
+
+def test_run_readme_only_change_auto_merges_on_own_branch(tmp_path, monkeypatch):
+    # Start with the README at one text, then (simulate the generator having
+    # changed it) re-write it so git sees a diff.
+    root = _make_repo(tmp_path, "# readme (old)\n")
+    monkeypatch.setattr(ua, "REPO_ROOT", str(root))
+    monkeypatch.setattr(ua, "PINNED_YAML", str(root / "pinned-actions.yaml"))
+    monkeypatch.setattr(ua, "readme_changed", lambda: True)
+    calls = _install_pr_recorders(monkeypatch)
+
+    # Resolver returns the SAME sha as already pinned => NO action-ref change,
+    # only the README moved.
+    def fake_resolver(owner, repo, tag):
+        return _CURRENT_SHAS[(owner, repo)]
+
+    rc = ua.run(dry_run=False, resolver=fake_resolver)
+    assert rc == 0
+    # README-only change goes on its OWN branch, never on the action branch.
+    assert ("open_pr", ua.README_BRANCH) in calls
+    assert ("open_pr", ua.ACTION_BRANCH) not in calls
+    # And it IS auto-merged (content only, no trust boundary).
+    assert any(c[0] == "auto_merge_pr" for c in calls)
+

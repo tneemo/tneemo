@@ -52,7 +52,11 @@ REPO_ROOT = os.path.dirname(
 PINNED_YAML = os.path.join(REPO_ROOT, "pinned-actions.yaml")
 
 PR_TITLE = "chore(deps): bump pinned GitHub Actions to verified SHAs [skip ci]"
-PR_BRANCH = "bot/action-sha-bumps"
+# Human-gated branch for action-SHA changes (never auto-merged).
+ACTION_BRANCH = "bot/action-sha-bumps"
+# Separate branch for README-only / OSS-content changes. Kept distinct so a
+# README refresh can never clobber or auto-merge an open action-SHA PR.
+README_BRANCH = "bot/oss-readme-refresh"
 SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 # Matches:   uses: actions/checkout@<sha>   # comment..........
 USES_RE = re.compile(
@@ -217,28 +221,30 @@ def current_sha_in_workflow(workflow: str, owner: str, repo: str) -> str:
 def apply_changes(changes: list[dict]) -> list[str]:
     """Write the proposed SHAs into each workflow file and pinned-actions.yaml.
 
-    Returns the list of file paths that were changed.
+    Returns ONLY the files whose content actually changed. This matters for
+    the review gate: a no-op pin rewrite (resolved SHA == current SHA) must
+    not be reported as a modification, or it would taint a README-only change
+    set and wrongly suppress its auto-merge.
     """
     modified: list[str] = []
-    # 1. Rewrite each workflow's `uses:` lines.
-    workflows_touched: set[str] = set()
     for ch in changes:
         wf = os.path.join(REPO_ROOT, ch["workflow"])
         with open(wf, encoding="utf-8") as f:
-            lines = f.readlines()
+            before = f.read()
         new_lines = []
-        for line in lines:
+        for line in before.splitlines(keepends=True):
             p = parse_action_line(line)
             if p and p["owner"] == ch["owner"] and p["repo"] == ch["repo"]:
                 new_lines.append(rewrite_uses(line, ch["new_sha"], ch["comment"]))
             else:
                 new_lines.append(line)
-        with open(wf, "w", encoding="utf-8") as f:
-            f.writelines(new_lines)
-        workflows_touched.add(ch["workflow"])
-        if wf not in modified:
-            modified.append(wf)
-    # 2. Update the SHA fields inside pinned-actions.yaml (kept in sync).
+        after = "".join(new_lines)
+        if after != before:
+            with open(wf, "w", encoding="utf-8") as f:
+                f.write(after)
+            if wf not in modified:
+                modified.append(wf)
+    # Update the SHA fields inside pinned-actions.yaml (kept in sync).
     if _sync_pinned_shas(changes):
         if PINNED_YAML not in modified:
             modified.append(PINNED_YAML)
@@ -349,9 +355,9 @@ def pr_exists(branch: str) -> Optional[str]:
     return None
 
 
-def open_pr(body: str) -> str:
+def open_pr(body: str, branch: str = ACTION_BRANCH) -> str:
     r = _gh("pr", "create", "--title", PR_TITLE, "--body", body,
-            "--head", PR_BRANCH, "--base", "main")
+            "--head", branch, "--base", "main")
     m = re.search(r"https?://\S+", r.stdout)
     return m.group(0) if m else r.stdout.strip()
 
@@ -360,11 +366,11 @@ def update_pr(number: str, body: str) -> None:
     _gh("pr", "edit", number, "--body", body)
 
 
-def commit_and_push(modified: list[str]) -> None:
-    _gh("checkout", "-B", PR_BRANCH)
+def commit_and_push(modified: list[str], branch: str = ACTION_BRANCH) -> None:
+    _gh("checkout", "-B", branch)
     _gh("add", *modified)
     _gh("commit", "-m", PR_TITLE, check=False)
-    _gh("push", "--force", "--set-upstream", "origin", PR_BRANCH)
+    _gh("push", "--force", "--set-upstream", "origin", branch)
 
 
 def auto_merge_pr(number: str) -> None:
@@ -397,7 +403,7 @@ def run(dry_run: bool = False, resolver: Optional[Callable] = None) -> int:
         print("--dry-run: no changes written, no PR opened.")
         return 0
 
-    # Apply action-SHA changes.
+    # Apply action-SHA changes (only files that actually changed).
     modified = apply_changes(changes)
 
     # OSS content refresh (relocated here from update-oss.yml).
@@ -409,20 +415,34 @@ def run(dry_run: bool = False, resolver: Optional[Callable] = None) -> int:
         print("Nothing to update.")
         return 0
 
-    commit_and_push(modified)
-    body = build_pr_body(changes)
-    existing = pr_exists(PR_BRANCH)
+    # Review decision + branch isolation:
+    #  * A change set that touches NO action ref (README-only) is safe to
+    #    auto-merge and goes on its OWN branch (README_BRANCH) so it can
+    #    never collide with / clobber an open action-SHA PR.
+    #  * Any change that touches an action ref stays on ACTION_BRANCH and is
+    #    NEVER auto-merged - it waits for human review.
+    readme_only = is_readme_only(modified)
+    branch = README_BRANCH if readme_only else ACTION_BRANCH
+    commit_and_push(modified, branch)
+    if readme_only:
+        body = (
+            "Automated OSS/README refresh (content only; no GitHub Action ref "
+            "touched). Auto-merged after checks pass - no trust boundary crossed."
+        )
+    else:
+        body = build_pr_body(changes)
+    existing = pr_exists(branch)
     if existing:
         update_pr(existing, body)
         print(f"Updated PR #{existing}")
         pr_num = existing
     else:
-        url = open_pr(body)
+        url = open_pr(body, branch)
         print(f"Opened PR: {url}")
-        pr_num = pr_exists(PR_BRANCH)
+        pr_num = pr_exists(branch)
 
     # Auto-merge ONLY when the change set touches no action ref.
-    if pr_num and is_readme_only(modified):
+    if pr_num and readme_only:
         auto_merge_pr(pr_num)
         print(f"README-only PR #{pr_num} auto-merged (no action ref).")
     else:
