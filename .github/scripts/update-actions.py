@@ -139,10 +139,18 @@ def rewrite_uses(line: str, new_sha: str, comment: str) -> str:
     return f"{parsed['indent']}uses: {parsed['owner']}/{parsed['repo']}@{new_sha}{newline}"
 
 
-def load_pinned(path: str = PINNED_YAML) -> list[dict]:
-    """Load the canonical pinned-action list (PyYAML)."""
+def load_pinned(path: Optional[str] = None) -> list[dict]:
+    """Load the canonical pinned-action list (PyYAML).
+
+    ``path`` defaults to the module global ``PINNED_YAML`` resolved at *call*
+    time (not definition time), so callers that monkeypatch ``ua.PINNED_YAML``
+    for isolation (tests, dry-run in a scratch checkout) get a deterministic
+    target instead of the default frozen at import.
+    """
     import yaml
 
+    if path is None:
+        path = PINNED_YAML
     with open(path, encoding="utf-8") as f:
         data = yaml.safe_load(f)
     if not isinstance(data, dict) or "actions" not in data:
