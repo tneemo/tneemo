@@ -1,0 +1,8 @@
+# CODEOWNERS
+#
+# Any change under .github/ (workflows, scripts, pinned-actions.yaml, this
+# file) requires review from the repo owner. This prevents a bot token from
+# self-merging action-ref changes - the update-actions.py script opens a
+# human-gated PR for action SHAs and never auto-merges it (ADR-0001 D4).
+
+.github/    @tneemo

@@ -6,15 +6,17 @@ on:
   workflow_dispatch: {} # permite rodar manualmente
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   update-oss:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      # v4.4.0; pin reviewed 2026-08-04. Update only via a reviewed Dependabot PR.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
 
-      - uses: actions/setup-python@v5
+      # v5.6.0; pin reviewed 2026-08-04. Update only via a reviewed Dependabot PR.
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
           python-version: "3.12"
 
@@ -23,15 +25,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python .github/scripts/generate-oss-section.py
 
-      - name: Commit if changed
-        run: |
-          git config user.name "tneemo[bot]"
-          git config user.email "tneemo@users.noreply.github.com"
-          if ! git diff --quiet README.md; then
-            git add README.md
-            git commit -m "docs: refresh OSS contributions from API [skip ci]"
-            git push origin main
-            echo "README atualizado"
-          else
-            echo "sem mudanças — nada a commitar"
-          fi
+      # NOTE: the direct-to-main "Commit if changed" push was REMOVED. The
+      # OSS-section refresh is now owned by .github/workflows/update-actions.yml,
+      # which opens/auto-merges a README-only PR (no action ref, no trust
+      # boundary). This file must never contain a `git push` of any action ref.
