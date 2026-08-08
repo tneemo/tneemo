@@ -331,4 +331,3 @@ def test_run_readme_only_change_auto_merges_on_own_branch(tmp_path, monkeypatch)
     assert ("open_pr", ua.ACTION_BRANCH) not in calls
     # And it IS auto-merged (content only, no trust boundary).
     assert any(c[0] == "auto_merge_pr" for c in calls)
-
