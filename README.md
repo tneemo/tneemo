@@ -118,11 +118,28 @@ philosophy: "Se não existe, eu construo. Se existe, eu refaço melhor."
 
 ## `./oss --live`
 
-> Números gerados automaticamente pela API do GitHub em 2026-08-03 —
+> Números gerados automaticamente pela API do GitHub em 2026-08-09 —
 > sem mão humana, sem medalha mordida. 😄
 
 | Métrica | Valor |
 |---|---|
+| PRs no upstream ([NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent)) | **5** total · **5** abertas |
+| Reviews formais dados | **14** |
+| Issues abertas por mim | **0** |
+
+**PRs abertas agora:**
+  - [#78571](https://github.com/NousResearch/hermes-agent/pull/78571) fix: enforce LF line endings for text fi
+  - [#77769](https://github.com/NousResearch/hermes-agent/pull/77769) feat(curator): include archived skills i
+  - [#77664](https://github.com/NousResearch/hermes-agent/pull/77664) feat(custom-providers): add bearer_auth 
+
+**Últimas PRs que revistei:**
+  - [#77840](https://github.com/NousResearch/hermes-agent/pull/77840)
+  - [#77658](https://github.com/NousResearch/hermes-agent/pull/77658)
+  - [#77548](https://github.com/NousResearch/hermes-agent/pull/77548)
+  - [#77517](https://github.com/NousResearch/hermes-agent/pull/77517)
+
+---
+|---|
 | PRs no upstream ([NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent)) | **3** total · **3** abertas |
 | Reviews formais dados | **4** |
 | Issues abertas por mim | **0** |
