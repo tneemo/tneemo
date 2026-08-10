@@ -25,6 +25,14 @@ The GitHub API call used to resolve a tag -> SHA is::
 
 This is the authoritative tag -> SHA mapping on GitHub.
 
+``gh`` is used ONLY for ``api`` and ``pr`` operations. All local git work
+(checkout/add/commit/push) shells out to real ``git``: the ``gh`` CLI has no
+git passthrough (``gh checkout`` fails with ``unknown command``), so routing
+git through ``gh`` would silently break PR creation.
+
+PyYAML is required to parse ``pinned-actions.yaml``; ``update-actions.yml``
+installs it on the runner (``python -m pip install pyyaml``).
+
 Testable units
 --------------
 * ``resolve_sha``        - wraps the ``gh`` call, validates the 40-hex shape.
@@ -147,7 +155,14 @@ def load_pinned(path: Optional[str] = None) -> list[dict]:
     for isolation (tests, dry-run in a scratch checkout) get a deterministic
     target instead of the default frozen at import.
     """
-    import yaml
+    try:
+        import yaml
+    except ImportError:
+        raise RuntimeError(
+            "PyYAML is required to parse pinned-actions.yaml. Install it with "
+            "`python -m pip install pyyaml` (update-actions.yml does this on "
+            "the runner before invoking the script)."
+        ) from None
 
     if path is None:
         path = PINNED_YAML
@@ -346,21 +361,57 @@ def is_readme_only(modified_files: list[str]) -> bool:
     return "README.md" in modified_files
 
 
-# ---- PR plumbing (gh) -------------------------------------------------------
+# ---- PR plumbing (gh for api/pr, git for local git work) -------------------
 
 def _gh(*args: str, check: bool = True) -> subprocess.CompletedProcess:
+    """Run ``gh`` (GitHub CLI). Used ONLY for ``api`` and ``pr`` commands.
+
+    Never pass git subcommands here: ``gh`` has no git passthrough
+    (``gh checkout`` -> ``unknown command``), so git work goes through
+    ``_git`` instead.
+    """
     return subprocess.run(
         ["gh", *args], cwd=REPO_ROOT, check=check,
         capture_output=True, text=True,
     )
 
 
+def _git(*args: str, check: bool = True) -> subprocess.CompletedProcess:
+    """Run real ``git`` in the repo root (checkout/add/commit/push)."""
+    return subprocess.run(
+        ["git", *args], cwd=REPO_ROOT, check=check,
+        capture_output=True, text=True,
+    )
+
+
+def _ensure_git_identity() -> None:
+    """Make sure the runner can commit (a bare checkout has no git identity).
+
+    GitHub-hosted runners preconfigure a bot identity, but a scratch checkout
+    or a self-hosted runner may not. Set one only when missing so the commit
+    step never fails with 'Please tell me who you are'.
+    """
+    r = _git("config", "user.email", check=False)
+    if r.returncode != 0 or not r.stdout.strip():
+        _git("config", "user.email", "41898282+github-actions[bot]@users.noreply.github.com")
+        _git("config", "user.name", "github-actions[bot]")
+
+
 def pr_exists(branch: str) -> Optional[str]:
+    """Return the PR number for ``branch``, or None if no open PR exists.
+
+    Uses ``// empty`` in the jq filter so an empty list yields NO output
+    (plain ``.[0].number`` would print the literal string ``null``, which is
+    truthy and would make the caller take the wrong code path).
+    """
     r = _gh("pr", "list", "--head", branch, "--json", "number,url",
-            "--jq", ".[0].number", check=False)
-    if r.returncode == 0 and r.stdout.strip():
-        return r.stdout.strip()
-    return None
+            "--jq", ".[0].number // empty", check=False)
+    out = r.stdout.strip() if r.returncode == 0 else ""
+    # Belt-and-braces: some gh/jq combos print the literal `null` for an
+    # empty list; never let a truthy "null" masquerade as a PR number.
+    if not out or out == "null":
+        return None
+    return out
 
 
 def open_pr(body: str, branch: str = ACTION_BRANCH) -> str:
@@ -375,10 +426,17 @@ def update_pr(number: str, body: str) -> None:
 
 
 def commit_and_push(modified: list[str], branch: str = ACTION_BRANCH) -> None:
-    _gh("checkout", "-B", branch)
-    _gh("add", *modified)
-    _gh("commit", "-m", PR_TITLE, check=False)
-    _gh("push", "--force", "--set-upstream", "origin", branch)
+    """Commit the changed files on ``branch`` and force-push it to origin.
+
+    Uses real ``git`` (NOT ``gh``): the GitHub CLI has no git passthrough, so
+    routing checkout/add/commit/push through ``gh`` makes every PR-open run
+    fail on the first git operation. ``gh`` stays reserved for ``api``/``pr``.
+    """
+    _ensure_git_identity()
+    _git("checkout", "-B", branch)
+    _git("add", "--", *modified)
+    _git("commit", "-m", PR_TITLE, check=False)
+    _git("push", "--force", "--set-upstream", "origin", branch)
 
 
 def auto_merge_pr(number: str) -> None:

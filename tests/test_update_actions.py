@@ -331,3 +331,176 @@ def test_run_readme_only_change_auto_merges_on_own_branch(tmp_path, monkeypatch)
     assert ("open_pr", ua.ACTION_BRANCH) not in calls
     # And it IS auto-merged (content only, no trust boundary).
     assert any(c[0] == "auto_merge_pr" for c in calls)
+
+
+# ---- Real-plumbing regression tests (SDLC review t_e810a6a7) --------------
+# These do NOT mock commit_and_push / open_pr / update_pr / auto_merge_pr /
+# pr_exists. commit_and_push runs REAL git against a REAL temp repo with a
+# REAL local bare origin; only the `gh` boundary is faked.
+
+def _make_repo_with_origin(tmp_path, readme_text):
+    """Like _make_repo, plus a local bare origin so commit_and_push can
+    actually push. Returns (root, origin_dir)."""
+    root = _make_repo(tmp_path, readme_text)
+    origin = tmp_path / "origin.git"
+    _sp.run(["git", "init", "--bare", "-q", str(origin)], check=True)
+    _sp.run(["git", "remote", "add", "origin", str(origin)], cwd=root, check=True)
+    return root, origin
+
+
+def test_commit_and_push_uses_real_git_not_gh(tmp_path, monkeypatch):
+    """The blocking bug: commit_and_push used `gh checkout/add/commit/push`,
+    which fails (`gh` has no git passthrough), so no PR was ever created.
+
+    Regression: commit_and_push must shell out to real `git` and actually
+    create + push the branch. `gh` must never be invoked for git work.
+    """
+    root, origin = _make_repo_with_origin(tmp_path, "# readme\n")
+    monkeypatch.setattr(ua, "REPO_ROOT", str(root))
+    monkeypatch.setattr(ua, "PINNED_YAML", str(root / "pinned-actions.yaml"))
+
+    # If commit_and_push calls gh for git work, fail loudly.
+    def _no_gh(*args, **kw):
+        raise AssertionError(f"commit_and_push must not call gh for git work: {args}")
+
+    monkeypatch.setattr(ua, "_gh", _no_gh)
+
+    # Change a file so there is something to commit.
+    (root / "README.md").write_text("# readme (v2)\n", encoding="utf-8")
+    ua.commit_and_push(["README.md"], branch="bot/test-bump")
+
+    # The branch exists locally, with the expected commit message...
+    br = _sp.run(
+        ["git", "branch", "--list", "bot/test-bump"], cwd=root,
+        capture_output=True, text=True, check=True,
+    )
+    assert "bot/test-bump" in br.stdout
+    log = _sp.run(
+        ["git", "log", "-1", "--format=%s", "bot/test-bump"], cwd=root,
+        capture_output=True, text=True, check=True,
+    )
+    assert log.stdout.strip() == ua.PR_TITLE
+    # ...and was force-pushed to origin (ls-remote sees the ref).
+    ls = _sp.run(
+        ["git", "ls-remote", "origin", "refs/heads/bot/test-bump"], cwd=root,
+        capture_output=True, text=True, check=True,
+    )
+    assert "bot/test-bump" in ls.stdout
+
+
+def test_pr_exists_empty_list_is_none_not_null_string():
+    """pr_exists must return None when no PR exists for the branch.
+
+    The old `--jq '.[0].number'` printed the literal string `null` for an
+    empty list, which is truthy -> the caller wrongly took the UPDATE path and
+    ran `gh pr edit null`. The `// empty` filter yields no output instead.
+    """
+    import subprocess as sp
+
+    def _fake_gh_empty(*args, **kw):
+        return sp.CompletedProcess(args, 0, stdout="", stderr="")
+
+    def _fake_gh_null(*args, **kw):
+        # Belt-and-braces: even if some gh build prints `null`, treat as None.
+        return sp.CompletedProcess(args, 0, stdout="null\n", stderr="")
+
+    original = ua._gh
+    try:
+        ua._gh = _fake_gh_empty
+        assert ua.pr_exists("bot/action-sha-bumps") is None
+        ua._gh = _fake_gh_null
+        assert ua.pr_exists("bot/action-sha-bumps") is None
+    finally:
+        ua._gh = original
+
+
+def test_pr_exists_returns_number():
+    import subprocess as sp
+
+    def _fake_gh(*args, **kw):
+        return sp.CompletedProcess(args, 0, stdout="42\n", stderr="")
+
+    original = ua._gh
+    try:
+        ua._gh = _fake_gh
+        assert ua.pr_exists("bot/action-sha-bumps") == "42"
+    finally:
+        ua._gh = original
+
+
+def test_run_end_to_end_real_git_fake_gh(tmp_path, monkeypatch):
+    """Full run() with REAL git plumbing (branch/commit/push to a real bare
+    origin) and only the `gh` boundary faked (api/pr responses).
+
+    Proves the acceptance path the review flagged as broken: an action-SHA
+    change commits on ACTION_BRANCH via git, is pushed, and opens a
+    human-gated PR that is NOT auto-merged.
+    """
+    import subprocess as sp
+
+    root, origin = _make_repo_with_origin(tmp_path, "# readme\n")
+    monkeypatch.setattr(ua, "REPO_ROOT", str(root))
+    monkeypatch.setattr(ua, "PINNED_YAML", str(root / "pinned-actions.yaml"))
+    monkeypatch.setattr(ua, "readme_changed", lambda: False)
+    monkeypatch.setattr(ua, "run_oss_generator", lambda: None)
+
+    new_sha = "f" * 40
+    gh_calls = []
+    pr_list_calls = {"n": 0}
+
+    def fake_gh(*args, check=True, **kw):
+        gh_calls.append(args)
+        cmd = args[0]
+        if cmd == "api":
+            # repos/<o>/<r>/git/refs/tags/<tag> --jq .object.sha
+            return sp.CompletedProcess(args, 0, stdout=new_sha + "\n", stderr="")
+        if cmd == "pr" and args[1] == "list":
+            # First call: no open PR yet (empty output with // empty).
+            # Second call (after create): the PR now exists.
+            pr_list_calls["n"] += 1
+            out = "" if pr_list_calls["n"] == 1 else "42\n"
+            return sp.CompletedProcess(args, 0, stdout=out, stderr="")
+        if cmd == "pr" and args[1] == "create":
+            return sp.CompletedProcess(
+                args, 0, stdout="https://github.com/tneemo/tneemo/pull/42\n", stderr=""
+            )
+        if cmd == "pr" and args[1] == "edit":
+            return sp.CompletedProcess(args, 0, stdout="", stderr="")
+        if cmd == "pr" and args[1] == "merge":
+            return sp.CompletedProcess(args, 0, stdout="", stderr="")
+        raise AssertionError(f"unexpected gh call: {args}")
+
+    monkeypatch.setattr(ua, "_gh", fake_gh)
+
+    def fake_resolver(owner, repo, tag):
+        return new_sha
+
+    rc = ua.run(dry_run=False, resolver=fake_resolver)
+    assert rc == 0
+
+    # The action branch was really created, committed, and pushed to origin.
+    ls = _sp.run(
+        ["git", "ls-remote", "origin", f"refs/heads/{ua.ACTION_BRANCH}"], cwd=root,
+        capture_output=True, text=True, check=True,
+    )
+    assert ua.ACTION_BRANCH in ls.stdout, "action branch was not pushed to origin"
+    log = _sp.run(
+        ["git", "log", "-1", "--format=%s", ua.ACTION_BRANCH], cwd=root,
+        capture_output=True, text=True, check=True,
+    )
+    assert log.stdout.strip() == ua.PR_TITLE
+
+    # A PR was OPENED on the action branch (the acceptance delivery), and it
+    # was NOT auto-merged (human-gated).
+    assert any(
+        a[:2] == ("pr", "create") and "--head" in a and ua.ACTION_BRANCH in a
+        for a in gh_calls
+    ), f"no pr create for action branch in {gh_calls}"
+    assert not any(a[:2] == ("pr", "merge") for a in gh_calls), (
+        "action-SHA PR must never be auto-merged"
+    )
+
+    # The pushed branch carries ONLY 40-hex SHAs (no @v lines in the workflow).
+    wf = (root / ".github" / "workflows" / "update-oss.yml").read_text(encoding="utf-8")
+    assert "uses: actions/checkout@" + new_sha in wf
+    assert not any("uses:" in l and "@v" in l for l in wf.splitlines())
