@@ -29,6 +29,11 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install PyYAML
+        # The toolcache Python from actions/setup-python ships only pip; the
+        # scraper needs PyYAML to parse pinned-actions.yaml.
+        run: python -m pip install --quiet pyyaml
+
       - name: Resolve and open/update pinned-action PR
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

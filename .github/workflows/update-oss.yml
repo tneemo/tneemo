@@ -1,4 +1,11 @@
-name: update-oss-section
+name: verify-pinned-actions
+
+# Health check companion to update-actions.yml. update-actions.yml runs the
+# scraper and opens/updates the human-gated SHA-pin PR; this workflow
+# VERIFIES (dry-run only) that every tracked tag still resolves to a 40-hex
+# SHA, failing the weekly check if any pin is broken. It never writes to the
+# repo and never opens a PR. Kept as a separate file so the SHA pins have a
+# stable consumer on disk (pinned-actions.yaml -> .github/workflows/update-oss.yml).
 
 on:
   schedule:
@@ -9,7 +16,7 @@ permissions:
   contents: read
 
 jobs:
-  update-oss:
+  verify-oss:
     runs-on: ubuntu-latest
     steps:
       # v4.4.0; pin reviewed 2026-08-04. Update only via a reviewed Dependabot PR.
@@ -20,12 +27,14 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Generate OSS section from GitHub API
+      - name: Install PyYAML
+        # The toolcache Python from actions/setup-python ships only pip; the
+        # scraper needs PyYAML to parse pinned-actions.yaml.
+        run: python -m pip install --quiet pyyaml
+
+      - name: Verify tracked pins still resolve to 40-hex SHAs
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: python .github/scripts/generate-oss-section.py
-
-      # NOTE: the direct-to-main "Commit if changed" push was REMOVED. The
-      # OSS-section refresh is now owned by .github/workflows/update-actions.yml,
-      # which opens/auto-merges a README-only PR (no action ref, no trust
-      # boundary). This file must never contain a `git push` of any action ref.
+        # --dry-run resolves and prints, writes nothing, opens no PR. Exit 2
+        # if any tracked tag fails to resolve to a 40-hex SHA.
+        run: python .github/scripts/update-actions.py --dry-run
