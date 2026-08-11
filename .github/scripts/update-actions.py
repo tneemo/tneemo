@@ -356,7 +356,7 @@ def is_readme_only(modified_files: list[str]) -> bool:
     for f in modified_files:
         if f in (PINNED_YAML,):
             return False
-        if f.endswith(".github/workflows/update-oss.yml"):
+        if f.startswith(".github/workflows/") and f.endswith(".yml"):
             return False
     return "README.md" in modified_files
 

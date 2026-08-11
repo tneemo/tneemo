@@ -179,6 +179,9 @@ def test_is_readme_only_allows_readme_only():
 def test_is_readme_only_blocks_action_ref():
     assert ua.is_readme_only([".github/workflows/update-oss.yml"]) is False
     assert ua.is_readme_only(["pinned-actions.yaml"]) is False
+    # F1 defense-in-depth: ANY workflow file blocks auto-merge, not just update-oss.yml
+    assert ua.is_readme_only([".github/workflows/update-actions.yml"]) is False
+    assert ua.is_readme_only([".github/workflows/some-other-workflow.yml"]) is False
     # mixed: an action ref taints the whole change set
     assert ua.is_readme_only(["README.md", ".github/workflows/update-oss.yml"]) is False
     assert ua.is_readme_only([]) is False
