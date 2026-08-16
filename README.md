@@ -118,11 +118,28 @@ philosophy: "Se não existe, eu construo. Se existe, eu refaço melhor."
 
 ## `./oss --live`
 
-> Números gerados automaticamente pela API do GitHub em 2026-08-09 —
+> Números gerados automaticamente pela API do GitHub em 2026-08-16 —
 > sem mão humana, sem medalha mordida. 😄
 
 | Métrica | Valor |
 |---|---|
+| PRs no upstream ([NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent)) | **10** total · **10** abertas |
+| Reviews formais dados | **14** |
+| Issues abertas por mim | **0** |
+
+**PRs abertas agora:**
+  - [#83571](https://github.com/NousResearch/hermes-agent/pull/83571) fix(kanban): fallback summary→result in 
+  - [#82791](https://github.com/NousResearch/hermes-agent/pull/82791) fix(cron): mark job degraded on persiste
+  - [#82790](https://github.com/NousResearch/hermes-agent/pull/82790) feat(kanban): capability-based routing v
+
+**Últimas PRs que revistei:**
+  - [#77840](https://github.com/NousResearch/hermes-agent/pull/77840)
+  - [#77658](https://github.com/NousResearch/hermes-agent/pull/77658)
+  - [#77548](https://github.com/NousResearch/hermes-agent/pull/77548)
+  - [#77517](https://github.com/NousResearch/hermes-agent/pull/77517)
+
+---
+|---|
 | PRs no upstream ([NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent)) | **5** total · **5** abertas |
 | Reviews formais dados | **14** |
 | Issues abertas por mim | **0** |
