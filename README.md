@@ -126,7 +126,7 @@ philosophy: "Se não existe, eu construo. Se existe, eu refaço melhor."
 
 [![Website](https://img.shields.io/badge/tneemo.com-000000?style=for-the-badge&logo=About.me&logoColor=white)](https://tneemo.com)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/joaopedromunhozp)
-[![LinkedIn]([https://img.shields.io/badge/X-0077B5?style=for-the-badge&logo=linkedin&logoColor=white](https://img.shields.io/badge/X-000000?style=for-the-badge&logo=X&logoColor=white))](https://x.com/unktneemo)
+[![X](https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/unktneemo)
 </div>
 
 ---
