@@ -1,19 +1,19 @@
-<!-- TNEEMO — README DE PERFIL -->
+<!-- TNEEMO | GitHub Profile README -->
 
 <div align="center">
 
-```
-████████╗███╗   ██╗███████╗███████╗███╗   ███╗ ██████╗ 
+```text
+████████╗███╗   ██╗███████╗███████╗███╗   ███╗ ██████╗
 ╚══██╔══╝████╗  ██║██╔════╝██╔════╝████╗ ████║██╔═══██╗
    ██║   ██╔██╗ ██║█████╗  █████╗  ██╔████╔██║██║   ██║
    ██║   ██║╚██╗██║██╔══╝  ██╔══╝  ██║╚██╔╝██║██║   ██║
    ██║   ██║ ╚████║███████╗███████╗██║ ╚═╝ ██║╚██████╔╝
-   ╚═╝   ╚═╝  ╚═══╝╚══════╝╚══════╝╚═╝     ╚═╝ ╚═════╝ 
+   ╚═╝   ╚═╝  ╚═══╝╚══════╝╚══════╝╚═╝     ╚═╝ ╚═════╝
 ```
 
-**`João · IT Coordinator · Tneemo Industries founder · Systems Dev`**
+**`Systems Engineering · AI Agents · Infrastructure · Open Source`**
 
-[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=14&pause=1000&color=00FF99&center=true&vCenter=true&width=600&lines=Building+things+that+shouldn't+exist+yet.;IT+Coordinator+%40+Prefeitura+de+Mandaguari%2C+PR;Founder+%40+Tneemo+Industries+since+2018;500%2B+endpoints.+74%2B+units.+1+coordinator.;VRAU.)](https://git.io/typing-svg)
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=14&pause=1200&color=00FF99&center=true&vCenter=true&width=650&lines=Building+things+that+shouldn't+exist+yet.;Engineering+systems%2C+not+just+software.;Agents.+Infrastructure.+Security.+Research.;Turning+weird+ideas+into+working+systems.;VRAU.)](https://git.io/typing-svg)
 
 </div>
 
@@ -22,16 +22,18 @@
 ## `whoami`
 
 ```yaml
-name: João
 alias: tneemo
-age: 22
-location: Mandaguari, PR — Brasil
-role: IT Coordinator @ Prefeitura Municipal de Mandaguari
-      Founder @ Tneemo Industries
-      Student @ Systems Analysis & Development — UniCesumar
 
-current_machine: i5-11600K · RTX 3090 · 32GB RAM · sagrado
-field_machine:   ThinkPad T14 Gen 1 AMD
+focus:
+  - AI agents & autonomous systems
+  - Developer tools & infrastructure
+  - Security engineering
+  - Experimental computing
+
+background:
+  - IT operations & infrastructure
+  - Systems development
+  - Automation at scale
 
 philosophy: "Se não existe, eu construo. Se existe, eu refaço melhor."
 ```
@@ -46,23 +48,24 @@ philosophy: "Se não existe, eu construo. Se existe, eu refaço melhor."
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white)
 ![pfSense](https://img.shields.io/badge/pfSense-212121?style=flat-square&logo=pfsense&logoColor=white)
 ![Zabbix](https://img.shields.io/badge/Zabbix-CC0000?style=flat-square&logo=zabbix&logoColor=white)
-![LibreNMS](https://img.shields.io/badge/LibreNMS-1C3A5E?style=flat-square)
 ![GLPI](https://img.shields.io/badge/GLPI-1A7FAD?style=flat-square)
 ![Cloudflare](https://img.shields.io/badge/Cloudflare-F38020?style=flat-square&logo=cloudflare&logoColor=white)
 
-**Dev**
+**Software Engineering**
 
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)
+![Rust](https://img.shields.io/badge/Rust-000000?style=flat-square&logo=rust&logoColor=white)
 ![React](https://img.shields.io/badge/React-20232A?style=flat-square&logo=react&logoColor=61DAFB)
 ![Hono](https://img.shields.io/badge/Hono-E36002?style=flat-square&logo=hono&logoColor=white)
-![Rust](https://img.shields.io/badge/Rust-000000?style=flat-square&logo=rust&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=white)
-![Drizzle](https://img.shields.io/badge/Drizzle-C5F74F?style=flat-square&logo=drizzle&logoColor=black)
 
-**3D & Game Dev**
+**Research & Exploration**
 
-![Blender](https://img.shields.io/badge/Blender-E87D0D?style=flat-square&logo=blender&logoColor=white)
-![Unreal Engine](https://img.shields.io/badge/Unreal%20Engine-313131?style=flat-square&logo=unrealengine&logoColor=white)
+![AI Agents](https://img.shields.io/badge/AI-Agents-00CC88?style=flat-square)
+![LLM Architectures](https://img.shields.io/badge/LLM-Architectures-147D64?style=flat-square)
+![Security](https://img.shields.io/badge/Security-Engineering-343A40?style=flat-square)
+![Automation](https://img.shields.io/badge/Systems-Automation-276DC3?style=flat-square)
 
 </div>
 
@@ -72,51 +75,14 @@ philosophy: "Se não existe, eu construo. Se existe, eu refaço melhor."
 
 <div align="center">
 
-<img height="160" src="https://github-readme-stats.vercel.app/api?username=tneemo&show_icons=true&theme=chartreuse-dark&hide_border=true&bg_color=0d1117&title_color=00FF99&icon_color=00FF99&text_color=c9d1d9&count_private=true" />
-<img height="160" src="https://github-readme-stats.vercel.app/api/top-langs/?username=tneemo&layout=compact&theme=chartreuse-dark&hide_border=true&bg_color=0d1117&title_color=00FF99&text_color=c9d1d9&langs_count=6" />
+<img height="160" alt="GitHub statistics" src="https://github-readme-stats.vercel.app/api?username=tneemo&show_icons=true&theme=chartreuse-dark&hide_border=true&bg_color=0d1117&title_color=00FF99&icon_color=00FF99&text_color=c9d1d9" />
+<img height="160" alt="Most used languages" src="https://github-readme-stats.vercel.app/api/top-langs/?username=tneemo&layout=compact&theme=chartreuse-dark&hide_border=true&bg_color=0d1117&title_color=00FF99&langs_count=6" />
 
-<img src="https://github-readme-streak-stats.herokuapp.com/?user=tneemo&theme=chartreuse-dark&hide_border=true&background=0d1117&stroke=00FF99&ring=00FF99&fire=FF6B35&currStreakLabel=00FF99" />
+<img alt="GitHub contribution streak" src="https://github-readme-streak-stats.herokuapp.com/?user=tneemo&theme=chartreuse-dark&hide_border=true&background=0d1117&stroke=00FF99&ring=00FF99&fire=FF6B35&currStreakLabel=00FF99" />
 
-<img src="https://github-readme-activity-graph.vercel.app/graph?username=tneemo&bg_color=0d1117&color=00FF99&line=00FF99&point=FFFFFF&area=true&hide_border=true" />
+<img alt="GitHub activity graph" src="https://github-readme-activity-graph.vercel.app/graph?username=tneemo&bg_color=0d1117&color=00FF99&line=00FF99&point=FFFFFF&area=true&hide_border=true" />
 
 </div>
-
----
-
-## `./tneemo-industries --about`
-
-> Tneemo Industries é um ecossistema de projetos construído desde 2018 —
-> começou como um nick, virou cultura, depois virou infraestrutura.
->
-> Hardware industrial (**Forjatec**) · Marketplaces (**Collector Platform**) ·
-> AI local (**Kranio · NCL**) · Game dev (**Hantavirus FPS**) ·
-> Redes Minecraft (**Dragon Realms**) · Gestão pública de TI em escala real.
->
-> Tudo construído por uma pessoa, com foco cirúrgico e 1 bilhão de anos de dedicação.
-
----
-
-## `./oss --live`
-
-> Números gerados automaticamente pela API do GitHub em 2026-10-18 —
-> sem mão humana, sem medalha mordida. 😄
-
-| Métrica | Valor |
-|---|---|
-| PRs no upstream ([NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent)) | **10** total · **10** abertas |
-| Reviews formais dados | **14** |
-| Issues abertas por mim | **0** |
-
-**PRs abertas agora:**
-  - [#83571](https://github.com/NousResearch/hermes-agent/pull/83571) fix(kanban): fallback summary→result in 
-  - [#82791](https://github.com/NousResearch/hermes-agent/pull/82791) fix(cron): mark job degraded on persiste
-  - [#82790](https://github.com/NousResearch/hermes-agent/pull/82790) feat(kanban): capability-based routing v
-
-**Últimas PRs que revistei:**
-  - [#77840](https://github.com/NousResearch/hermes-agent/pull/77840)
-  - [#77658](https://github.com/NousResearch/hermes-agent/pull/77658)
-  - [#77548](https://github.com/NousResearch/hermes-agent/pull/77548)
-  - [#77517](https://github.com/NousResearch/hermes-agent/pull/77517)
 
 ---
 
@@ -127,11 +93,11 @@ philosophy: "Se não existe, eu construo. Se existe, eu refaço melhor."
 [![Website](https://img.shields.io/badge/tneemo.com-000000?style=for-the-badge&logo=About.me&logoColor=white)](https://tneemo.com)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/joaopedromunhozp)
 [![X](https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/unktneemo)
+
 </div>
 
 ---
 
 <div align="center">
   <sub>The grid remembers.</sub>
-   <sub>Impenetrável.</sub>
 </div>
