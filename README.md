@@ -86,6 +86,30 @@ philosophy: "Se não existe, eu construo. Se existe, eu refaço melhor."
 
 ---
 
+## `./oss --live`
+
+> Números gerados automaticamente pela API do GitHub em 2026-10-25 —
+> sem mão humana, sem medalha mordida. 😄
+
+| Métrica | Valor |
+|---|---|
+| PRs no upstream ([NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent)) | **11** total · **5** abertas |
+| Reviews formais dados | **14** |
+| Issues abertas por mim | **0** |
+
+**PRs abertas agora:**
+  - [#144471](https://github.com/NousResearch/hermes-agent/pull/144471) fix(bluebubbles): drop tapbacks sent as 
+  - [#83571](https://github.com/NousResearch/hermes-agent/pull/83571) fix(kanban): fallback summary→result in 
+  - [#82791](https://github.com/NousResearch/hermes-agent/pull/82791) fix(cron): mark job degraded on persiste
+
+**Últimas PRs que revistei:**
+  - [#77840](https://github.com/NousResearch/hermes-agent/pull/77840)
+  - [#77658](https://github.com/NousResearch/hermes-agent/pull/77658)
+  - [#77548](https://github.com/NousResearch/hermes-agent/pull/77548)
+  - [#77517](https://github.com/NousResearch/hermes-agent/pull/77517)
+
+---
+
 ## `./contact`
 
 <div align="center">
